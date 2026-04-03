@@ -2,7 +2,6 @@ name: Update Weather ICS
 
 on:
   schedule:
-    # 기상청 발표 15분 뒤 실행 (KST 기준 02:15, 05:15 ... 23:15)
     - cron: '15 17,20,23,2,5,8,11,14 * * *'
   push:
     paths:
@@ -11,15 +10,19 @@ on:
       - main
   workflow_dispatch:
 
-# 🌟 권한 설정 추가 (exit code 128 해결 핵심)
+# 🌟 Node.js 24 강제 사용 설정 (경고 해결 핵심)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: write
+  pages: write      # 페이지 배포 권한
+  id-token: write   # 배포 인증 권한
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 🌟 최신 버전(v4, v5)으로 업데이트 (Node.js 경고 해결)
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -43,7 +46,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add weather.ics
-          # 변경사항이 있을 때만 실행
           if [ -n "$(git status --porcelain)" ]; then
             git commit -m "Update weather.ics [$KST_TIME KST]"
             git push
