@@ -51,7 +51,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add weather.ics
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -m "Update weather.ics [$KST_TIME KST]"
+            git commit -m ". Update weather.ics [$KST_TIME KST]"
             git push
           else
             echo "No changes to commit"
